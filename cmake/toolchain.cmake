@@ -11,6 +11,9 @@ set(CMAKE_SYSTEM_PROCESSOR ARM)
 set(CMAKE_C_COMPILER ${ARM_GCC})
 set(CMAKE_CXX_COMPILER ${ARM_G++})
 set(CMAKE_ASM_COMPILER ${ARM_GCC})
+set(CMAKE_AR ${ARM_AR})
+
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 #---------------------------------------------------------------------------------------------------------------------
 # Flags
@@ -54,7 +57,8 @@ set(CMAKE_ASM_COMPILER ${ARM_GCC})
 # -Werror \
 # ====================================================================================================================
 set(CMAKE_C_FLAGS_INIT
-        "-mcpu=cortex-m4 \
+        "-O0 -g0 \
+        -mcpu=cortex-m4 \
         -mthumb \
         -mabi=aapcs \
         -Wall \
@@ -86,7 +90,8 @@ set(CMAKE_C_FLAGS_INIT
 # -g3
 # ====================================================================================================================
 set(CMAKE_ASM_FLAGS
-        "-mcpu=cortex-m4 \
+        "-g0 \
+        -mcpu=cortex-m4 \
         -mthumb \
         -mabi=aapcs \
         -mfloat-abi=hard \
@@ -120,7 +125,9 @@ set(CMAKE_ASM_FLAGS
 # -L${SDK_DIR}/modules/nrfx/mdk -T${CMAKE_HOME_DIRECTORY}/linker.ld
 # ====================================================================================================================
 set(CMAKE_EXE_LINKER_FLAGS_INIT
-        "-mcpu=cortex-m4 \
+        "-O0 \
+        -g0 \
+        -mcpu=cortex-m4 \
         -mthumb \
         -mabi=aapcs \
         -mfloat-abi=hard \

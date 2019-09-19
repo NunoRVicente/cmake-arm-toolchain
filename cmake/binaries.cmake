@@ -1,6 +1,6 @@
-#---------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
 # Set toolchain paths
-#---------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
 if(NOT DEFINED TOOLCHAIN_PREFIX)
     message(FATAL_ERROR "Toolchain path not set. Please set TOOLCHAIN_PREFIX with GNU Tools path.")
 endif()
@@ -10,18 +10,20 @@ set(TOOLCHAIN_BIN_DIR ${TOOLCHAIN_PREFIX}/bin)
 set(TOOLCHAIN_INC_DIR ${TOOLCHAIN_PREFIX}/${TOOLCHAIN}/include)
 set(TOOLCHAIN_LIB_DIR ${TOOLCHAIN_PREFIX}/${TOOLCHAIN}/lib)
 
+#----------------------------------------------------------------------------------------------------------------------
 # Set system depended extensions
+#----------------------------------------------------------------------------------------------------------------------
 if(WIN32)
     set(TOOLCHAIN_EXT ".exe" )
 else()
     set(TOOLCHAIN_EXT "" )
 endif()
 
-#---------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
 # Defining macro for checking binaries
-#---------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
 macro(check_binary VAR_NAME BIN_NAME)
-    FIND_PROGRAM(${VAR_NAME} ${TOOLCHAIN}-${BIN_NAME}${TOOLCHAIN_EXT} PATHS ${TOOLCHAIN_BIN_DIR})
+    FIND_PROGRAM(${VAR_NAME} ${TOOLCHAIN}-${BIN_NAME}${TOOLCHAIN_EXT} PATHS ${TOOLCHAIN_BIN_DIR} NO_DEFAULT_PATH)
     if (${${VAR_NAME}} STREQUAL ${VAR_NAME}-NOTFOUND)
         message(FATAL_ERROR "ARM ${BIN_NAME} Not Found in ${TOOLCHAIN_BIN_DIR}")
     endif()
@@ -29,6 +31,9 @@ macro(check_binary VAR_NAME BIN_NAME)
     message("${BIN_NAME} : ${${VAR_NAME}}")
 endmacro()
 
+#----------------------------------------------------------------------------------------------------------------------
+# Checking binaries
+#----------------------------------------------------------------------------------------------------------------------
 message("")
 check_binary(ARM_ADDR2LINE addr2line)
 check_binary(ARM_AR ar)
