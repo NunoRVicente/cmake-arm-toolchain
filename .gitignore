@@ -1,4 +1,4 @@
-*build*
-*debug/*
-*release/*
+*_build/*
+*_debug/*
+*_release/*
 .idea

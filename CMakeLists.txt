@@ -5,10 +5,9 @@
 ##
 cmake_minimum_required(VERSION 3.14)
 
-# Set toolchain paths and check for binaries.
-# It is done here so it can be performed before all the calls of toolchain.cmake file.
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    message(FATAL_ERROR "Toolchain file not set. Please set CMAKE_TOOLCHAIN_FILE with toolchain.cmake path.")
+    message("Setting default project toolchain 'cmake/toolchain.cmake'")
+    set(CMAKE_TOOLCHAIN_FILE cmake/toolchain.cmake)
 endif()
 
 if (NOT DEFINED SDK_DIR)
@@ -22,7 +21,21 @@ project(TagWifi
         LANGUAGES C ASM
 )
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+option(VERBOSE_MAKEFILE "Makefile verbose [ON/OFF]" OFF)
+
+include(cmake/tools.cmake)
+
+message("==================== BUILD TYPE ====================")
+message("                       ${CMAKE_BUILD_TYPE}          ")
+message("====================================================")
+message("")
+
+#----------------------------------------------------------------------------------------------------------------------
+# Basic configs
+#----------------------------------------------------------------------------------------------------------------------
+if (${VERBOSE_MAKEFILE})
+    set(CMAKE_VERBOSE_MAKEFILE ON)
+endif ()
 
 find_program(NRFJPROG nrfjprog)
 
@@ -45,13 +58,15 @@ add_compile_definitions(__HEAP_SIZE=8192)
 add_compile_definitions(__STACK_SIZE=8192)
 
 #----------------------------------------------------------------------------------------------------------------------
-# Nested builds
+# Child directories
 #----------------------------------------------------------------------------------------------------------------------
 add_subdirectory(src)
 
 #----------------------------------------------------------------------------------------------------------------------
 # Targets
 #----------------------------------------------------------------------------------------------------------------------
+file(GLOB LIBRARIES ${CMAKE_BINARY_DIR}/lib/*.a)
+
 add_custom_target(export_elf ALL
         COMMAND
             ${ARM_OBJCOPY} -O ihex ${CMAKE_BINARY_DIR}/bin/blinky.elf ${CMAKE_BINARY_DIR}/bin/blinky.hex
@@ -72,3 +87,28 @@ add_custom_target(erase
         COMMAND
             nrfjprog -e
 )
+
+add_custom_target(reset
+        COMMAND
+            nrfjprog --reset
+        )
+
+add_custom_target(dump_section_headers
+        DEPENDS
+        export_elf
+        )
+
+foreach(LIB ${LIBRARIES})
+    dump_object(dump_section_headers -h ${LIB})
+endforeach()
+dump_object(dump_section_headers -h ${CMAKE_BINARY_DIR}/bin/blinky.hex)
+
+add_custom_target(dump_symbols
+        DEPENDS
+        export_elf
+        )
+
+foreach(LIB ${LIBRARIES})
+    dump_object(dump_symbols -t ${LIB})
+endforeach()
+dump_object(dump_symbols -t ${CMAKE_BINARY_DIR}/bin/blinky.hex)

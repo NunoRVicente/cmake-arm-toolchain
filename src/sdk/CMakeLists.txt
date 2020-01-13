@@ -51,8 +51,4 @@ set_source_files_properties(${SDK_DIR}/modules/nrfx/mdk/gcc_startup_nrf52.S PROP
             "-x assembler-with-cpp"
 )
 
-set_target_properties(sdk PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
+set_target_properties_default(sdk)

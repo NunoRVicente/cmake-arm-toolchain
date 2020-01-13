@@ -70,7 +70,7 @@ set(CMAKE_C_FLAGS_INIT
         -fno-strict-aliasing \
         -fno-builtin \
         -fshort-enums"
-)
+        )
 
 # ====================================================================================================================
 # -mcpu=cortex-m4       : Select Cortex-M4 architecture.
@@ -96,7 +96,7 @@ set(CMAKE_ASM_FLAGS
         -mabi=aapcs \
         -mfloat-abi=hard \
         -mfpu=fpv4-sp-d16"
-)
+        )
 
 # ====================================================================================================================
 # https://www.st.com/content/ccc/resource/technical/document/user_manual/group1/cd/29/43/c5/36/c0/40/bb/Newlib_nano_readme/files/newlib-nano_readme.pdf/jcr:content/translations/en.newlib-nano_readme.pdf
@@ -135,7 +135,7 @@ set(CMAKE_EXE_LINKER_FLAGS_INIT
         -Wl,--gc-sections \
         --specs=nano.specs \
         --specs=nosys.specs"
-)
+        )
 
 #---------------------------------------------------------------------------------------------------------------------
 # Modes
